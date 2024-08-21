@@ -1,0 +1,15 @@
+module CPolygonID {
+    header "libpolygonid.h"
+    export *
+}
+module WitnessCalc {
+    header "witnesscalc_authV2.h"
+    header "witnesscalc_credentialAtomicQueryMTPV2.h"
+    header "witnesscalc_credentialAtomicQueryMTPV2OnChain.h"
+    header "witnesscalc_credentialAtomicQuerySigV2.h"
+    header "witnesscalc_credentialAtomicQuerySigV2OnChain.h"
+    header "witnesscalc_credentialAtomicQueryV3.h"
+    header "witnesscalc_credentialAtomicQueryV3OnChain.h"
+    header "witnesscalc_linkedMultiQuery10.h"
+    export *
+}

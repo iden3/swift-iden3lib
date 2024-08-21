@@ -1,0 +1,10 @@
+.idea/
+libs/
+include/
+!include/prover.h
+!include/modulemap.module
+witnesscalc/
+iden3clib/
+.build/
+WitnessCalc.xcframework/
+witnesscalc.zip
