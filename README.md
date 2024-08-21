@@ -33,12 +33,6 @@ Change the `.binaryTarget` value.  The `url` will have the version we're about t
 Change the `checksum` value to be the SHA value from the `openssl` command from earlier:  
 `checksum: "83807727c184eb03a38cc0a4c7ed9eb1cb2df96d80885536f99f1eff936f6938"` 
 
-- Run a build and make sure this works
-
-```bash
-rm -Rf .build && swift build
-```
-
 - Commit and push `Package.swift`
 
 - Create and push the tag:
