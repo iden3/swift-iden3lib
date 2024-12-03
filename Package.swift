@@ -23,11 +23,7 @@ let package = Package(
             name: "LibIden3",
             dependencies: [
                 "Iden3CLibrary",
-                "WitnessCalc",
             ]),
-        .binaryTarget(name: "WitnessCalc",
-                      url: "https://github.com/iden3/swift-iden3lib/releases/download/v0.0.2/witnesscalc.zip",
-                      checksum: "35b8f9423daedaec21f96c86bdc62faf6bf13f9acb9df8d3b4e35b2027d66de0"),
         .binaryTarget(name: "Iden3CLibrary", path: "Iden3CLibrary.xcframework"),
     ]
 )
