@@ -16,14 +16,33 @@ let package = Package(
             targets: [ "LibIden3" ]
         ),
     ],
-    dependencies: [
-    ],
     targets: [
         .target(
             name: "LibIden3",
             dependencies: [
-                "Iden3CLibrary",
-            ]),
-        .binaryTarget(name: "Iden3CLibrary", path: "Iden3CLibrary.xcframework"),
+                "LibIden3C",
+            ],
+            path: "Sources/LibIden3",
+            sources: [
+                "LibIden3.swift",
+                "Codable+utils.swift",
+                "String+utils.swift"
+            ]
+        ),
+        .target(
+            name: "LibIden3C",
+            dependencies: ["Iden3CLibrary"],
+            path: "Sources/LibIden3C"
+        ),
+        .binaryTarget(
+            name: "Iden3CLibrary",
+            path: "Iden3CLibrary.xcframework"
+        ),
+        .testTarget(
+            name: "rapidsnarkTests",
+            dependencies: [
+                "LibIden3",
+            ]
+        )
     ]
 )

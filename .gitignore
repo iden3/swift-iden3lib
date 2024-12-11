@@ -1,6 +1,6 @@
 .idea/
 libs/
-include/
+/include/
 !include/prover.h
 !include/modulemap.module
 witnesscalc/

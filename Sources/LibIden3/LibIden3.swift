@@ -1,10 +1,12 @@
 import Foundation
 import os
 
-import CPolygonID
+import LibIden3C
 
-fileprivate typealias GoFunc0 = (UnsafeMutablePointer<UnsafeMutablePointer<PLGNStatus>?>) -> GoUint8
-
+// config, status
+fileprivate typealias GoFunc0 = (UnsafeMutablePointer<CChar>,
+                                 UnsafeMutablePointer<UnsafeMutablePointer<PLGNStatus>?>) -> GoUint8
+// response,
 fileprivate typealias GoFunc1 = (UnsafeMutablePointer<UnsafeMutablePointer<CChar>?>,
                                  UnsafeMutablePointer<CChar>,
                                  UnsafeMutablePointer<UnsafeMutablePointer<PLGNStatus>?>) -> GoUint8
@@ -14,11 +16,31 @@ fileprivate typealias GoFunc2 = (UnsafeMutablePointer<UnsafeMutablePointer<CChar
                                  UnsafeMutablePointer<CChar>,
                                  UnsafeMutablePointer<UnsafeMutablePointer<PLGNStatus>?>) -> GoUint8
 
+fileprivate typealias GoFunc3 = (UnsafeMutablePointer<CChar>,
+                                 UnsafeMutablePointer<CChar>,
+                                 UnsafeMutablePointer<UnsafeMutablePointer<PLGNStatus>?>) -> GoUint8
+
+
 /// Swift wrapper for the Golang PolygonID library
 public enum LibIden3 {
-    static func cleanCache() -> String {
-        callWithStatus(functionName: #function,
-                       goFunction: PLGNCleanCache)
+    public static func getAuthV2Inputs(input: String) -> String {
+        callWithStatus(input: input,
+                       functionName: #function,
+                       goFunction: PLGNAuthV2InputsMarshal)
+    }
+    
+    public static func calculateGenesisID(input: String, config: String) -> String {
+        callWithStatus(input: input,
+                       config: config,
+                       functionName: #function,
+                       goFunction: PLGNNewGenesisID)
+    }
+    
+    public static func calculateGenesisIdFromEth(input: String, config: String) -> String {
+        callWithStatus(input: input,
+                       config: config,
+                       functionName: #function,
+                       goFunction: PLGNNewGenesisIDFromEth)
     }
     
     public static func createClaim(input: String) -> String {
@@ -27,95 +49,147 @@ public enum LibIden3 {
                        goFunction: PLGNCreateClaim)
     }
     
-    static func calculateGenesisID(input: String, config: String) -> String {
-        callWithStatus(input1: input,
-                       input2: config,
-                       functionName: #function,
-                       goFunction: PLGNNewGenesisID)
-    }
-    
-    static func calculateGenesisIdFromEth(input: String, config: String) -> String {
-        callWithStatus(input1: input,
-                       input2: config,
-                       functionName: #function,
-                       goFunction: PLGNNewGenesisIDFromEth)
-    }
-    
-    static func calculateProfileID(input: String) -> String {
-        callWithStatus(input: input,
-                       functionName: #function,
-                       goFunction: PLGNProfileID)
-    }
-    
-    static func convertIdToBigInt(input: String) -> String {
+    public static func convertIdToBigInt(input: String) -> String {
         callWithStatus(input: input,
                        functionName: #function,
                        goFunction: PLGNIDToInt)
     }
     
-    static func getWitnessInputs(input: String) -> String {
-        callWithStatus(input: input,
-                       functionName: #function,
-                       goFunction: PLGNAuthV2InputsMarshal)
-    }
-    
-    static func getSigProofInputs(input: String, config: String) -> String {
-        callWithStatus(input1: input,
-                       input2: config,
-                       functionName: #function,
-                       goFunction: PLGNAtomicQuerySigV2Inputs)
-    }
-    
-    static func getMtpProofInputs(input: String, config: String) -> String {
-        callWithStatus(input1: input,
-                       input2: config,
-                       functionName: #function,
-                       goFunction: PLGNAtomicQueryMtpV2Inputs)
-    }
-    
-    static func getSigOnChainProofInputs(input: String, config: String) -> String {
-        callWithStatus(input1: input,
-                       input2: config,
-                       functionName: #function,
-                       goFunction: PLGNAtomicQuerySigV2OnChainInputs)
-    }
-    
-    static func getV3Inputs(input: String, config: String) -> String {
-        callWithStatus(input1: input,
-                       input2: config,
-                       functionName: #function,
-                       goFunction: PLGNAtomicQueryV3Inputs)
-    }
-    
-    static func getV3OnChainInputs(input: String, config: String) -> String {
-        callWithStatus(input1: input,
-                       input2: config,
-                       functionName: #function,
-                       goFunction: PLGNAtomicQueryV3OnChainInputs)
-    }
-    
-    static func getMtpOnChainProofInputs(input: String, config: String) -> String {
-        callWithStatus(input1: input,
-                       input2: config,
-                       functionName: #function,
-                       goFunction: PLGNAtomicQueryMtpV2OnChainInputs)
-    }
-    
-    static func proofFromSmartContract(input: String) -> String {
+    public static func proofFromSmartContract(input: String) -> String {
         callWithStatus(input: input,
                        functionName: #function,
                        goFunction: PLGNProofFromSmartContract)
     }
     
-    private static func callWithStatus(functionName: String, goFunction: GoFunc0) -> String {
+    public static func calculateProfileID(input: String) -> String {
+        callWithStatus(input: input,
+                       functionName: #function,
+                       goFunction: PLGNProfileID)
+    }
+    
+    public static func getSigProofInputs(input: String, config: String) -> String {
+        callWithStatus(input: input,
+                       config: config,
+                       functionName: #function,
+                       goFunction: PLGNAtomicQuerySigV2Inputs)
+    }
+    
+    public static func getMtpProofInputs(input: String, config: String) -> String {
+        callWithStatus(input: input,
+                       config: config,
+                       functionName: #function,
+                       goFunction: PLGNAtomicQueryMtpV2Inputs)
+    }
+    
+    public static func getSigOnChainProofInputs(input: String, config: String) -> String {
+        callWithStatus(input: input,
+                       config: config,
+                       functionName: #function,
+                       goFunction: PLGNAtomicQuerySigV2OnChainInputs)
+    }
+    
+    public static func getMtpOnChainProofInputs(input: String, config: String) -> String {
+        callWithStatus(input: input,
+                       config: config,
+                       functionName: #function,
+                       goFunction: PLGNAtomicQueryMtpV2OnChainInputs)
+    }
+    
+    public static func getV3Inputs(input: String, config: String) -> String {
+        callWithStatus(input: input,
+                       config: config,
+                       functionName: #function,
+                       goFunction: PLGNAtomicQueryV3Inputs)
+    }
+    
+    public static func getV3OnChainInputs(input: String, config: String) -> String {
+        callWithStatus(input: input,
+                       config: config,
+                       functionName: #function,
+                       goFunction: PLGNAtomicQueryV3OnChainInputs)
+    }
+    
+    public static func getLinkedMultiQuery10Inputs(input: String, config: String) -> String {
+        callWithStatus(input: input,
+                       config: config,
+                       functionName: #function,
+                       goFunction: PLGNALinkedMultiQueryInputs)
+    }
+    
+    public static func cleanCache(config: String) -> String {
+        callWithStatus(config: config,
+                       functionName: #function,
+                       goFunction: PLGNCleanCache2)
+    }
+    
+    public static func cacheCredentials(input: String, config: String) -> String {
+        callWithStatus(input: input,
+                       config: config,
+                       functionName: #function,
+                       goFunction: PLGNCacheCredentials)
+    }
+    
+    public static func credentialFromOnchainHex(input: String, config: String) -> String {
+        callWithStatus(input: input,
+                       config: config,
+                       functionName: #function,
+                       goFunction: PLGNW3CCredentialFromOnchainHex)
+    }
+    
+    public static func describeID(input: String, config: String) -> String {
+        callWithStatus(input: input,
+                       config: config,
+                       functionName: #function,
+                       goFunction: PLGNDescribeID)
+    }
+    
+    public static func signPoseidon(input: String, config: String) -> String {
+        callWithStatus(input: input,
+                       config: config,
+                       functionName: #function,
+                       goFunction: PLGNBabyJubJubSignPoseidon)
+    }
+    
+    public static func verifyPoseidon(input: String, config: String) -> String {
+        callWithStatus(input: input,
+                       config: config,
+                       functionName: #function,
+                       goFunction: PLGNBabyJubJubVerifyPoseidon)
+    }
+    
+    public static func bjjPrivateToPublic(input: String, config: String) -> String {
+        callWithStatus(input: input,
+                       config: config,
+                       functionName: #function,
+                       goFunction: PLGNBabyJubJubPrivate2Public)
+    }
+    
+    public static func bjjPublicUncompress(input: String, config: String) -> String {
+        callWithStatus(input: input,
+                       config: config,
+                       functionName: #function,
+                       goFunction: PLGNBabyJubJubPublicUncompress)
+    }
+    
+    public static func bjjPublicCompress(input: String, config: String) -> String {
+        callWithStatus(input: input,
+                       config: config,
+                       functionName: #function,
+                       goFunction: PLGNBabyJubJubPublicCompress)
+    }
+    
+    private static func callWithStatus(config: String, functionName: String, goFunction: GoFunc0) -> String {
         Logger().debug("Calling function \(functionName)")
+        Logger().debug("Config: \(config)")
         
         var status: UnsafeMutablePointer<PLGNStatus>? = nil
         defer {
             status?.deallocate()
         }
         
-        let res = goFunction(&status)
+        let configCString = config.asUnsafeCStringPointer
+        
+        let res = goFunction(configCString, &status)
         
         if (res == 0) {
             consumeStatus(status: status)
@@ -144,30 +218,51 @@ public enum LibIden3 {
         return processResult(res: res, response: response, status: status, functionName: functionName)
     }
     
-    private static func callWithStatus(input1: String,
-                                       input2: String,
+    private static func callWithStatus(input: String,
+                                       config: String,
                                        functionName: String,
                                        goFunction: GoFunc2) -> String {
         Logger().debug("Calling function \(functionName)")
-        Logger().debug("Input1: \(input1)")
-        Logger().debug("Input2: \(input2)")
+        Logger().debug("Input: \(input)")
+        Logger().debug("Config: \(config)")
         
         var response: UnsafeMutablePointer<CChar>? = nil
         defer {
             response?.deallocate()
         }
         
-        let input1CString = input1.asUnsafeCStringPointer
-        let input2CString = input2.asUnsafeCStringPointer
+        let inputCString = input.asUnsafeCStringPointer
+        let configCString = config.asUnsafeCStringPointer
         
         var status: UnsafeMutablePointer<PLGNStatus>? = nil
         defer {
             status?.deallocate()
         }
         
-        let res = goFunction(&response, input1CString, input2CString, &status)
+        let res = goFunction(&response, inputCString, configCString, &status)
         
         return processResult(res: res, response: response, status: status, functionName: functionName)
+    }
+    
+    private static func callWithStatus(input: String, config: String, functionName: String, goFunction: GoFunc3) -> String {
+        Logger().debug("Calling function \(functionName)")
+        Logger().debug("Input: \(input)")
+        Logger().debug("Config: \(config)")
+        
+        var status: UnsafeMutablePointer<PLGNStatus>? = nil
+        defer {
+            status?.deallocate()
+        }
+        
+        let inputCString = input.asUnsafeCStringPointer
+        let configCString = config.asUnsafeCStringPointer
+        
+        let res = goFunction(inputCString, configCString, &status)
+        
+        if (res == 0) {
+            consumeStatus(status: status)
+        }
+        return ""
     }
     
     private static func processResult(res: GoUint8,
