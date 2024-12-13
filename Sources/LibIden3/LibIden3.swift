@@ -13,7 +13,7 @@ fileprivate typealias GoFunc1 = (UnsafeMutablePointer<UnsafeMutablePointer<CChar
 
 fileprivate typealias GoFunc2 = (UnsafeMutablePointer<UnsafeMutablePointer<CChar>?>,
                                  UnsafeMutablePointer<CChar>,
-                                 UnsafeMutablePointer<CChar>,
+                                 UnsafeMutablePointer<CChar>?,
                                  UnsafeMutablePointer<UnsafeMutablePointer<PLGNStatus>?>) -> GoUint8
 
 fileprivate typealias GoFunc3 = (UnsafeMutablePointer<CChar>,
@@ -143,35 +143,35 @@ public enum LibIden3 {
                        goFunction: PLGNDescribeID)
     }
     
-    public static func signPoseidon(input: String, config: String) -> String {
+    public static func signPoseidon(input: String, config: String? = nil) -> String {
         callWithStatus(input: input,
                        config: config,
                        functionName: #function,
                        goFunction: PLGNBabyJubJubSignPoseidon)
     }
     
-    public static func verifyPoseidon(input: String, config: String) -> String {
+    public static func verifyPoseidon(input: String, config: String? = nil) -> String {
         callWithStatus(input: input,
                        config: config,
                        functionName: #function,
                        goFunction: PLGNBabyJubJubVerifyPoseidon)
     }
     
-    public static func bjjPrivateToPublic(input: String, config: String) -> String {
+    public static func bjjPrivateToPublic(input: String, config: String? = nil) -> String {
         callWithStatus(input: input,
                        config: config,
                        functionName: #function,
                        goFunction: PLGNBabyJubJubPrivate2Public)
     }
     
-    public static func bjjPublicUncompress(input: String, config: String) -> String {
+    public static func bjjPublicUncompress(input: String, config: String? = nil) -> String {
         callWithStatus(input: input,
                        config: config,
                        functionName: #function,
                        goFunction: PLGNBabyJubJubPublicUncompress)
     }
     
-    public static func bjjPublicCompress(input: String, config: String) -> String {
+    public static func bjjPublicCompress(input: String, config: String? = nil) -> String {
         callWithStatus(input: input,
                        config: config,
                        functionName: #function,
@@ -219,12 +219,16 @@ public enum LibIden3 {
     }
     
     private static func callWithStatus(input: String,
-                                       config: String,
+                                       config: String?,
                                        functionName: String,
                                        goFunction: GoFunc2) -> String {
         Logger().debug("Calling function \(functionName)")
         Logger().debug("Input: \(input)")
-        Logger().debug("Config: \(config)")
+        if (config != nil) {
+            Logger().debug("Config: \(config!)")
+        } else {
+            Logger().debug("Config: nil")
+        }
         
         var response: UnsafeMutablePointer<CChar>? = nil
         defer {
@@ -232,8 +236,8 @@ public enum LibIden3 {
         }
         
         let inputCString = input.asUnsafeCStringPointer
-        let configCString = config.asUnsafeCStringPointer
-        
+        let configCString = config?.asUnsafeCStringPointer ?? UnsafeMutablePointer(nil)
+
         var status: UnsafeMutablePointer<PLGNStatus>? = nil
         defer {
             status?.deallocate()
